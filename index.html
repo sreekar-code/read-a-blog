@@ -31,6 +31,7 @@
       min-height: 100svh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
     }
 
     /* ─── Main ──────────────────────────────────── */
@@ -293,6 +294,7 @@
     }
 
     .blog-form input {
+      -webkit-appearance: none;
       background: transparent;
       border: 1px solid var(--border);
       padding: 10px 14px;
@@ -327,16 +329,34 @@
       color: var(--accent);
     }
 
+    /* ─── Desktop large (≥ 1200px) ──────────────── */
+
+    @media (min-width: 1200px) {
+      main {
+        padding: 88px 40px 72px;
+        gap: 64px;
+      }
+
+      .stage {
+        max-width: 600px;
+      }
+
+      .site-header,
+      .explainer {
+        max-width: 540px;
+      }
+    }
+
     /* ─── Tablet (≤ 768px) ──────────────────────── */
 
     @media (max-width: 768px) {
       main {
-        padding: 56px 20px 48px;
-        gap: 44px;
+        padding: 52px 20px 44px;
+        gap: 40px;
       }
 
       #post-card {
-        padding: 32px 32px;
+        padding: 28px 28px;
       }
     }
 
@@ -344,8 +364,12 @@
 
     @media (max-width: 480px) {
       main {
-        padding: 40px 16px 40px;
-        gap: 36px;
+        padding: 36px 16px 36px;
+        gap: 32px;
+      }
+
+      .site-name {
+        font-size: 2rem;
       }
 
       #read-btn {
@@ -356,7 +380,6 @@
 
       #post-card {
         padding: 24px 20px;
-        border-radius: 12px;
       }
 
       .card-title {
@@ -381,11 +404,15 @@
       }
 
       .explainer {
-        padding-top: 32px;
+        padding-top: 28px;
+      }
+
+      .explainer p {
+        font-size: 0.9rem;
       }
 
       footer {
-        padding: 0 16px 40px;
+        padding: 0 16px 36px;
       }
 
       .footer-inner {
