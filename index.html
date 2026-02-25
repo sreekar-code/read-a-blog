@@ -468,13 +468,29 @@
 
     document.getElementById('blog-form').addEventListener('submit', e => {
       e.preventDefault();
-      const blogUrl = document.getElementById('input-url').value.trim();
-      const name    = document.getElementById('input-name').value.trim();
-      const url     = new URL(GOOGLE_FORM_URL);
-      url.searchParams.set('usp', 'pp_url');
-      if (blogUrl) url.searchParams.set('entry.104619316', blogUrl);
-      if (name)    url.searchParams.set('entry.1383630533', name);
-      window.open(url.toString(), '_blank', 'noopener,noreferrer');
+      const blogUrl  = document.getElementById('input-url').value.trim();
+      const name     = document.getElementById('input-name').value.trim();
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+
+      // POST directly to Google Forms — no redirect, data goes straight to the Sheet
+      fetch(GOOGLE_FORM_URL.replace('/viewform', '/formResponse'), {
+        method: 'POST',
+        mode:   'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          'entry.104619316':  blogUrl,
+          'entry.1383630533': name,
+        }),
+      });
+
+      // Optimistic confirmation — no response comes back with no-cors
+      e.target.reset();
+      submitBtn.textContent = 'Thanks!';
+      submitBtn.disabled    = true;
+      setTimeout(() => {
+        submitBtn.textContent = 'Submit \u2192';
+        submitBtn.disabled    = false;
+      }, 3000);
     });
   </script>
 
