@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read a Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg:          #F5F0E8;
+      --surface:     #FDFAF5;
+      --text:        #2C2825;
+      --muted:       #8C7E74;
+      --accent:      #9B6B4F;
+      --accent-dark: #7D5540;
+      --border:      #E2D8CE;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Lora', Georgia, serif;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Main ──────────────────────────────────── */
+
+    main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 60px 24px;
+    }
+
+    .stage {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    /* ─── Button view ───────────────────────────── */
+
+    #btn-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    #read-btn {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 12px;
+      padding: 20px 64px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(155, 107, 79, 0.32);
+      letter-spacing: 0.01em;
+      transition:
+        background   0.2s ease,
+        transform    0.18s ease,
+        box-shadow   0.2s ease;
+    }
+
+    #read-btn:hover:not(:disabled) {
+      background: var(--accent-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 36px rgba(155, 107, 79, 0.44);
+    }
+
+    #read-btn:active:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(155, 107, 79, 0.28);
+    }
+
+    #read-btn:disabled {
+      cursor: default;
+      opacity: 0.72;
+    }
+
+    #read-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    #error-msg {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* ─── Card ──────────────────────────────────── */
+
+    #card-area {
+      display: none;
+    }
+
+    #post-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 44px;
+      box-shadow: 0 2px 24px rgba(44, 40, 37, 0.07);
+    }
+
+    .card-source {
+      font-size: 0.69rem;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-size: clamp(1.1rem, 2.8vw, 1.5rem);
+      font-weight: 600;
+      line-height: 1.44;
+      color: var(--text);
+      margin-bottom: 32px;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .btn-read {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 30px;
+      border-radius: 9px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .btn-read:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-read:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .btn-another {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.875rem;
+      cursor: pointer;
+      padding: 12px 0;
+      text-decoration: underline;
+      text-decoration-color: transparent;
+      text-underline-offset: 3px;
+      transition:
+        color                  0.15s ease,
+        text-decoration-color  0.15s ease;
+    }
+
+    .btn-another:hover {
+      color: var(--text);
+      text-decoration-color: var(--border);
+    }
+
+    .btn-another:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    /* ─── Footer ────────────────────────────────── */
+
+    footer {
+      padding: 0 24px 52px;
+      text-align: center;
+    }
+
+    .footer-divider {
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+      margin: 0 auto 32px;
+    }
+
+    .footer-inner {
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .footer-label {
+      font-size: 0.825rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 14px;
+    }
+
+    .blog-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .blog-form input,
+    .blog-form button {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.825rem;
+      border-radius: 7px;
+    }
+
+    .blog-form input {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .blog-form input::placeholder {
+      color: var(--muted);
+    }
+
+    .blog-form input:focus {
+      border-color: var(--accent);
+    }
+
+    .blog-form button {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 10px;
+      color: var(--muted);
+      cursor: pointer;
+      outline: none;
+      transition:
+        border-color  0.15s ease,
+        color         0.15s ease;
+    }
+
+    .blog-form button:hover,
+    .blog-form button:focus-visible {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ─── Mobile ─────────────────────────────────── */
+
+    @media (max-width: 500px) {
+      #post-card {
+        padding: 28px 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main>
+    <div class="stage">
+
+      <!-- Initial state: big button -->
+      <div id="btn-area">
+        <button id="read-btn">Read a Blog</button>
+        <p id="error-msg" style="display:none"></p>
+      </div>
+
+      <!-- Post card (revealed after fetch) -->
+      <div id="card-area">
+        <article id="post-card">
+          <p class="card-source" id="card-blog"></p>
+          <h2 class="card-title" id="card-title"></h2>
+          <div class="card-actions">
+            <a class="btn-read" id="card-link" href="#" target="_blank" rel="noopener noreferrer">
+              Read Post &rarr;
+            </a>
+            <button class="btn-another" id="btn-another">Try Another</button>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-divider"></div>
+    <div class="footer-inner">
+      <p class="footer-label">Have a blog?</p>
+      <form id="blog-form" class="blog-form" novalidate>
+        <input id="input-url"  type="url"  placeholder="RSS Feed URL"          autocomplete="off">
+        <input id="input-name" type="text" placeholder="Your name (optional)"  autocomplete="off">
+        <button type="submit">Submit &rarr;</button>
+      </form>
+    </div>
+  </footer>
+
+  <script>
+    /* ── Config ──────────────────────────────────── */
+
+    const feeds = [
+      "https://www.paulgraham.com/rss.html",
+      "https://simonwillison.net/atom/everything/"
+    ];
+
+    const GOOGLE_FORM_URL = 'YOUR_GOOGLE_FORM_URL';
+    const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
+
+    /* ── State ───────────────────────────────────── */
+
+    let allPosts = null;
+    let current  = null;
+
+    /* ── Data fetching ───────────────────────────── */
+
+    async function loadFeeds() {
+      const results = await Promise.allSettled(
+        feeds.map(url =>
+          fetch(RSS2JSON + encodeURIComponent(url))
+            .then(r => { if (!r.ok) throw new Error('Network error'); return r.json(); })
+        )
+      );
+
+      const posts = [];
+      for (const r of results) {
+        if (r.status !== 'fulfilled' || r.value.status !== 'ok') continue;
+        const blogName = r.value.feed.title;
+        for (const item of r.value.items) {
+          if (item.title && item.link) {
+            posts.push({
+              title: item.title.trim(),
+              link:  item.link,
+              blog:  blogName,
+            });
+          }
+        }
+      }
+      return posts;
+    }
+
+    function pickRandom(pool, exclude = null) {
+      const available = exclude ? pool.filter(p => p !== exclude) : pool;
+      const source    = available.length > 0 ? available : pool;
+      return source[Math.floor(Math.random() * source.length)] ?? null;
+    }
+
+    /* ── DOM helpers ─────────────────────────────── */
+
+    function setCardContent(post) {
+      document.getElementById('card-blog').textContent  = post.blog;
+      document.getElementById('card-title').textContent = post.title;
+      document.getElementById('card-link').href         = post.link;
+    }
+
+    // First reveal: button fades out, card fades+rises in
+    function revealCard(post) {
+      setCardContent(post);
+
+      const btnArea  = document.getElementById('btn-area');
+      const cardArea = document.getElementById('card-area');
+      const card     = document.getElementById('post-card');
+
+      // Fade button out
+      btnArea.style.transition = 'opacity 0.22s ease';
+      btnArea.style.opacity    = '0';
+
+      setTimeout(() => {
+        btnArea.style.display = 'none';
+
+        // Set card to starting (invisible) position before showing
+        card.style.transition = 'none';
+        card.style.opacity    = '0';
+        card.style.transform  = 'translateY(22px)';
+        cardArea.style.display = 'block';
+
+        // Trigger transition on next paint
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            card.style.transition = [
+              'opacity   0.48s cubic-bezier(0.2, 0.8, 0.3, 1)',
+              'transform 0.48s cubic-bezier(0.2, 0.8, 0.3, 1)',
+            ].join(', ');
+            card.style.opacity   = '1';
+            card.style.transform = 'translateY(0)';
+          });
+        });
+      }, 240);
+    }
+
+    // Subsequent swaps: quick fade out → update → fade back in
+    function swapCard(post) {
+      const card = document.getElementById('post-card');
+
+      card.style.transition = 'opacity 0.16s ease, transform 0.16s ease';
+      card.style.opacity    = '0';
+      card.style.transform  = 'translateY(10px)';
+
+      setTimeout(() => {
+        setCardContent(post);
+        card.style.transition = [
+          'opacity   0.38s cubic-bezier(0.2, 0.8, 0.3, 1)',
+          'transform 0.38s cubic-bezier(0.2, 0.8, 0.3, 1)',
+        ].join(', ');
+        card.style.opacity   = '1';
+        card.style.transform = 'translateY(0)';
+      }, 170);
+    }
+
+    /* ── Event handlers ──────────────────────────── */
+
+    const readBtn  = document.getElementById('read-btn');
+    const errorMsg = document.getElementById('error-msg');
+
+    readBtn.addEventListener('click', async () => {
+      readBtn.disabled       = true;
+      readBtn.textContent    = 'Finding something good\u2026';
+      errorMsg.style.display = 'none';
+
+      try {
+        if (!allPosts) allPosts = await loadFeeds();
+
+        if (allPosts.length === 0) throw new Error('No posts found');
+
+        current = pickRandom(allPosts);
+        revealCard(current);
+
+      } catch {
+        errorMsg.textContent   = 'Couldn\u2019t load any posts. Please try again.';
+        errorMsg.style.display = 'block';
+        readBtn.disabled       = false;
+        readBtn.textContent    = 'Read a Blog';
+      }
+    });
+
+    document.getElementById('btn-another').addEventListener('click', () => {
+      if (!allPosts || allPosts.length === 0) return;
+      current = pickRandom(allPosts, current);
+      swapCard(current);
+    });
+
+    document.getElementById('blog-form').addEventListener('submit', e => {
+      e.preventDefault();
+      window.open(GOOGLE_FORM_URL, '_blank', 'noopener,noreferrer');
+    });
+  </script>
+
+</body>
+</html>
