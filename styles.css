@@ -1,0 +1,424 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:          #131109;
+  --surface:     #1D1B12;
+  --text:        #EAE0CC;
+  --muted:       #7A7260;
+  --accent:      #C9905C;
+  --accent-dark: #A87040;
+  --border:      #35322A;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Lora', Georgia, serif;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ─── Main ──────────────────────────────────── */
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 72px 24px 60px;
+  gap: 56px;
+}
+
+.stage {
+  width: 100%;
+  max-width: 560px;
+}
+
+/* ─── Site header ───────────────────────────── */
+
+.site-header {
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+
+.site-name {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+
+.site-name em {
+  font-style: italic;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+/* ─── Explainer ─────────────────────────────── */
+
+.explainer {
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  padding-top: 40px;
+}
+
+.explainer-label {
+  font-size: 0.69rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.explainer p {
+  font-size: 0.875rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.explainer p + p {
+  margin-top: 10px;
+}
+
+/* ─── Button view ───────────────────────────── */
+
+#btn-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+#read-btn {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 100px;
+  padding: 20px 64px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(201, 144, 92, 0.3);
+  letter-spacing: 0.01em;
+  transition:
+    background   0.2s ease,
+    transform    0.18s ease,
+    box-shadow   0.2s ease;
+}
+
+#read-btn:hover:not(:disabled) {
+  background: var(--accent-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(201, 144, 92, 0.5);
+}
+
+#read-btn:active:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 12px rgba(201, 144, 92, 0.25);
+}
+
+#read-btn:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+
+#read-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+#error-msg {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ─── Card ──────────────────────────────────── */
+
+#card-area {
+  display: none;
+}
+
+#post-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 44px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+.card-source {
+  font-size: 0.69rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.card-title {
+  font-size: clamp(1.1rem, 2.8vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.44;
+  color: var(--text);
+  margin-bottom: 32px;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.btn-read {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 30px;
+  border-radius: 100px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.btn-read:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.btn-read:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.btn-another {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 12px 0;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition:
+    color                  0.15s ease,
+    text-decoration-color  0.15s ease;
+}
+
+.btn-another:hover {
+  color: var(--text);
+  text-decoration-color: var(--border);
+}
+
+.btn-another:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* ─── Footer ────────────────────────────────── */
+
+footer {
+  padding: 0 24px 52px;
+  text-align: center;
+}
+
+.footer-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--border);
+  margin: 0 auto 32px;
+}
+
+.footer-inner {
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.footer-label {
+  font-size: 0.825rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+.footer-hint {
+  font-size: 0.75rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--muted);
+  opacity: 0.7;
+  margin-bottom: 14px;
+}
+
+.blog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.blog-form input,
+.blog-form button {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.825rem;
+  border-radius: 7px;
+}
+
+.blog-form input {
+  -webkit-appearance: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.blog-form input::placeholder {
+  color: var(--muted);
+}
+
+.blog-form input:focus {
+  border-color: var(--accent);
+}
+
+.blog-form button {
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 10px;
+  color: var(--muted);
+  cursor: pointer;
+  outline: none;
+  transition:
+    border-color  0.15s ease,
+    color         0.15s ease;
+}
+
+.blog-form button:hover,
+.blog-form button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ─── Desktop large (≥ 1200px) ──────────────── */
+
+@media (min-width: 1200px) {
+  main {
+    padding: 88px 40px 72px;
+    gap: 64px;
+  }
+
+  .stage {
+    max-width: 600px;
+  }
+
+  .site-header,
+  .explainer {
+    max-width: 540px;
+  }
+}
+
+/* ─── Tablet (≤ 768px) ──────────────────────── */
+
+@media (max-width: 768px) {
+  main {
+    padding: 52px 20px 44px;
+    gap: 40px;
+  }
+
+  #post-card {
+    padding: 28px 28px;
+  }
+}
+
+/* ─── Mobile (≤ 480px) ──────────────────────── */
+
+@media (max-width: 480px) {
+  main {
+    padding: 36px 16px 36px;
+    gap: 32px;
+  }
+
+  .site-name {
+    font-size: 2rem;
+  }
+
+  #read-btn {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 18px 24px;
+  }
+
+  #post-card {
+    padding: 24px 20px;
+  }
+
+  .card-title {
+    font-size: 1.15rem;
+    margin-bottom: 24px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .btn-read {
+    text-align: center;
+    padding: 14px;
+  }
+
+  .btn-another {
+    text-align: center;
+    padding: 12px 0;
+  }
+
+  .explainer {
+    padding-top: 28px;
+  }
+
+  .explainer p {
+    font-size: 0.9rem;
+  }
+
+  footer {
+    padding: 0 16px 36px;
+  }
+
+  .footer-inner {
+    max-width: 100%;
+  }
+}
+
+/* ─── Touch: disable hover lift effects ──────── */
+
+@media (hover: none) {
+  #read-btn:hover:not(:disabled) {
+    transform: none;
+    box-shadow: 0 4px 24px rgba(201, 144, 92, 0.3);
+  }
+
+  .btn-read:hover {
+    transform: none;
+  }
+}
