@@ -3,7 +3,8 @@
 const feeds = [
 
   "https://sreekarscribbles.com/feed.xml",
-  "https://aravindballa.com/rss.xml"
+  "https://aravindballa.com/rss.xml",
+  "https://rss.beehiiv.com/feeds/arqSjkRars.xml"
 ];
 
 const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeW6icje8Lrm2LwJf51H5SpdufMQMcbSiUmRthoc8I8YQ20yg/viewform';
