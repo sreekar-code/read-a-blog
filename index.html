@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://api.rss2json.com https://docs.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none';">
   <title>Read a Blog</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +29,7 @@
       <!-- Initial state: big button -->
       <div id="btn-area">
         <button id="read-btn">Read a Blog</button>
-        <p id="error-msg" style="display:none"></p>
+        <p id="error-msg"></p>
       </div>
 
       <!-- Post card (revealed after fetch) -->
@@ -58,7 +59,7 @@
         <input id="input-url"  type="url"  placeholder="Blog URL"             autocomplete="off">
         <input id="input-name" type="text" placeholder="Your name (optional)" autocomplete="off">
         <!-- Honeypot: hidden from humans, bots fill it in -->
-        <input id="input-trap" type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
+        <input id="input-trap" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button type="submit">Submit &rarr;</button>
       </form>
     </div>

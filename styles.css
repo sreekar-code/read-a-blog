@@ -141,9 +141,17 @@ main {
 }
 
 #error-msg {
+  display: none;
   font-size: 0.85rem;
   color: var(--muted);
   font-style: italic;
+}
+
+#input-trap {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /*  Card  */
