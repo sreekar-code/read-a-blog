@@ -10,7 +10,7 @@ const feeds = [
 ];
 
 const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeW6icje8Lrm2LwJf51H5SpdufMQMcbSiUmRthoc8I8YQ20yg/viewform';
-const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
+const PROXY = '/.netlify/functions/rss-proxy?url=';
 
 // -- State --------------------------------------------
 
@@ -22,7 +22,7 @@ let current  = null;
 async function loadFeeds() {
   const results = await Promise.allSettled(
     feeds.map(url =>
-      fetch(RSS2JSON + encodeURIComponent(url))
+      fetch(PROXY + encodeURIComponent(url))
         .then(r => { if (!r.ok) throw new Error('Network error'); return r.json(); })
     )
   );
