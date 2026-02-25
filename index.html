@@ -328,11 +328,82 @@
       color: var(--accent);
     }
 
-    /* ─── Mobile ─────────────────────────────────── */
+    /* ─── Tablet (≤ 768px) ──────────────────────── */
 
-    @media (max-width: 500px) {
+    @media (max-width: 768px) {
+      main {
+        padding: 56px 20px 48px;
+        gap: 44px;
+      }
+
       #post-card {
-        padding: 28px 22px;
+        padding: 32px 32px;
+      }
+    }
+
+    /* ─── Mobile (≤ 480px) ──────────────────────── */
+
+    @media (max-width: 480px) {
+      main {
+        padding: 40px 16px 40px;
+        gap: 36px;
+      }
+
+      #read-btn {
+        width: 100%;
+        font-size: 1.1rem;
+        padding: 18px 24px;
+      }
+
+      #post-card {
+        padding: 24px 20px;
+        border-radius: 12px;
+      }
+
+      .card-title {
+        font-size: 1.15rem;
+        margin-bottom: 24px;
+      }
+
+      .card-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .btn-read {
+        text-align: center;
+        padding: 14px;
+      }
+
+      .btn-another {
+        text-align: center;
+        padding: 12px 0;
+      }
+
+      .explainer {
+        padding-top: 32px;
+      }
+
+      footer {
+        padding: 0 16px 40px;
+      }
+
+      .footer-inner {
+        max-width: 100%;
+      }
+    }
+
+    /* ─── Touch: disable hover lift effects ──────── */
+
+    @media (hover: none) {
+      #read-btn:hover:not(:disabled) {
+        transform: none;
+        box-shadow: 0 4px 20px rgba(155, 107, 79, 0.32);
+      }
+
+      .btn-read:hover {
+        transform: none;
       }
     }
   </style>
