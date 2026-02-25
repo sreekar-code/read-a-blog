@@ -52,10 +52,20 @@ function pickRandom(pool, exclude = null) {
 
 // -- DOM helpers --------------------------------------
 
+function isSafeUrl(url) {
+  try {
+    const { protocol } = new URL(url);
+    return protocol === 'https:' || protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
 function setCardContent(post) {
   document.getElementById('card-blog').textContent  = post.blog;
   document.getElementById('card-title').textContent = post.title;
-  document.getElementById('card-link').href         = post.link;
+  const link = document.getElementById('card-link');
+  link.href = isSafeUrl(post.link) ? post.link : '#';
 }
 
 // First reveal: button fades out, card fades+rises in
