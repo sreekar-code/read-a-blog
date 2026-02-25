@@ -318,6 +318,8 @@
       <form id="blog-form" class="blog-form" novalidate>
         <input id="input-url"  type="url"  placeholder="Blog URL"              autocomplete="off">
         <input id="input-name" type="text" placeholder="Your name (optional)"  autocomplete="off">
+        <!-- Honeypot: hidden from humans, bots fill it in -->
+        <input id="input-trap" type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
         <button type="submit">Submit &rarr;</button>
       </form>
     </div>
@@ -466,11 +468,25 @@
       swapCard(current);
     });
 
+    const RATE_LIMIT_MS = 10 * 60 * 1000; // 10 minutes
+
     document.getElementById('blog-form').addEventListener('submit', e => {
       e.preventDefault();
-      const blogUrl  = document.getElementById('input-url').value.trim();
-      const name     = document.getElementById('input-name').value.trim();
+      const blogUrl   = document.getElementById('input-url').value.trim();
+      const name      = document.getElementById('input-name').value.trim();
+      const honeypot  = document.getElementById('input-trap').value;
       const submitBtn = e.target.querySelector('button[type="submit"]');
+
+      // Honeypot triggered — bot detected, silently drop
+      if (honeypot) return;
+
+      // Rate limit — one submission per 10 minutes per browser
+      const lastSubmit = parseInt(localStorage.getItem('rab_last_submit') || '0', 10);
+      if (Date.now() - lastSubmit < RATE_LIMIT_MS) {
+        submitBtn.textContent = 'Please wait a bit!';
+        setTimeout(() => { submitBtn.textContent = 'Submit \u2192'; }, 2500);
+        return;
+      }
 
       // POST directly to Google Forms — no redirect, data goes straight to the Sheet
       fetch(GOOGLE_FORM_URL.replace('/viewform', '/formResponse'), {
@@ -484,6 +500,7 @@
       });
 
       // Optimistic confirmation — no response comes back with no-cors
+      localStorage.setItem('rab_last_submit', Date.now().toString());
       e.target.reset();
       submitBtn.textContent = 'Thanks!';
       submitBtn.disabled    = true;
