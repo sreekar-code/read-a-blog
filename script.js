@@ -3,7 +3,8 @@
 const feeds = [
   "https://www.paulgraham.com/rss.html",
   "https://simonwillison.net/atom/everything/",
-  "https://sreekarscribbles.com/feed.xml"
+  "https://sreekarscribbles.com/feed.xml",
+  "https://aravindballa.com/rss.xml"
 ];
 
 const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeW6icje8Lrm2LwJf51H5SpdufMQMcbSiUmRthoc8I8YQ20yg/viewform';
