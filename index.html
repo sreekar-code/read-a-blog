@@ -15,13 +15,13 @@
     }
 
     :root {
-      --bg:          #F5F0E8;
-      --surface:     #FDFAF5;
-      --text:        #2C2825;
-      --muted:       #8C7E74;
-      --accent:      #9B6B4F;
-      --accent-dark: #7D5540;
-      --border:      #E2D8CE;
+      --bg:          #131109;
+      --surface:     #1D1B12;
+      --text:        #EAE0CC;
+      --muted:       #7A7260;
+      --accent:      #C9905C;
+      --accent-dark: #A87040;
+      --border:      #35322A;
     }
 
     body {
@@ -58,10 +58,16 @@
     }
 
     .site-name {
-      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
       font-weight: 600;
       letter-spacing: -0.02em;
       margin-bottom: 14px;
+    }
+
+    .site-name em {
+      font-style: italic;
+      font-weight: 400;
+      opacity: 0.7;
     }
 
     /* ─── Explainer ─────────────────────────────── */
@@ -111,10 +117,10 @@
       color: #fff;
       background: var(--accent);
       border: none;
-      border-radius: 12px;
+      border-radius: 100px;
       padding: 20px 64px;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(155, 107, 79, 0.32);
+      box-shadow: 0 4px 24px rgba(201, 144, 92, 0.3);
       letter-spacing: 0.01em;
       transition:
         background   0.2s ease,
@@ -125,12 +131,12 @@
     #read-btn:hover:not(:disabled) {
       background: var(--accent-dark);
       transform: translateY(-3px);
-      box-shadow: 0 10px 36px rgba(155, 107, 79, 0.44);
+      box-shadow: 0 8px 32px rgba(201, 144, 92, 0.5);
     }
 
     #read-btn:active:not(:disabled) {
       transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(155, 107, 79, 0.28);
+      box-shadow: 0 2px 12px rgba(201, 144, 92, 0.25);
     }
 
     #read-btn:disabled {
@@ -160,7 +166,7 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 40px 44px;
-      box-shadow: 0 2px 24px rgba(44, 40, 37, 0.07);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
     }
 
     .card-source {
@@ -194,7 +200,7 @@
       color: #fff;
       text-decoration: none;
       padding: 12px 30px;
-      border-radius: 9px;
+      border-radius: 100px;
       font-family: system-ui, -apple-system, sans-serif;
       font-size: 0.875rem;
       font-weight: 500;
@@ -392,7 +398,7 @@
     @media (hover: none) {
       #read-btn:hover:not(:disabled) {
         transform: none;
-        box-shadow: 0 4px 20px rgba(155, 107, 79, 0.32);
+        box-shadow: 0 4px 24px rgba(201, 144, 92, 0.3);
       }
 
       .btn-read:hover {
@@ -406,7 +412,7 @@
   <main>
 
     <header class="site-header">
-      <h1 class="site-name">Read a Blog</h1>
+      <h1 class="site-name">Read <em>a</em> Blog</h1>
     </header>
 
     <section class="explainer">
