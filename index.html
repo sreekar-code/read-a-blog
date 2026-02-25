@@ -214,6 +214,14 @@
       font-size: 0.825rem;
       color: var(--muted);
       font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    .footer-hint {
+      font-size: 0.75rem;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: var(--muted);
+      opacity: 0.7;
       margin-bottom: 14px;
     }
 
@@ -306,8 +314,9 @@
     <div class="footer-divider"></div>
     <div class="footer-inner">
       <p class="footer-label">Have a blog?</p>
+      <p class="footer-hint">Make sure it has an RSS feed.</p>
       <form id="blog-form" class="blog-form" novalidate>
-        <input id="input-url"  type="url"  placeholder="RSS Feed URL"          autocomplete="off">
+        <input id="input-url"  type="url"  placeholder="Blog URL"              autocomplete="off">
         <input id="input-name" type="text" placeholder="Your name (optional)"  autocomplete="off">
         <button type="submit">Submit &rarr;</button>
       </form>
@@ -322,7 +331,7 @@
       "https://simonwillison.net/atom/everything/"
     ];
 
-    const GOOGLE_FORM_URL = 'YOUR_GOOGLE_FORM_URL';
+    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeW6icje8Lrm2LwJf51H5SpdufMQMcbSiUmRthoc8I8YQ20yg/viewform';
     const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
     /* ── State ───────────────────────────────────── */
@@ -459,7 +468,13 @@
 
     document.getElementById('blog-form').addEventListener('submit', e => {
       e.preventDefault();
-      window.open(GOOGLE_FORM_URL, '_blank', 'noopener,noreferrer');
+      const blogUrl = document.getElementById('input-url').value.trim();
+      const name    = document.getElementById('input-name').value.trim();
+      const url     = new URL(GOOGLE_FORM_URL);
+      url.searchParams.set('usp', 'pp_url');
+      if (blogUrl) url.searchParams.set('entry.104619316', blogUrl);
+      if (name)    url.searchParams.set('entry.1383630533', name);
+      window.open(url.toString(), '_blank', 'noopener,noreferrer');
     });
   </script>
 
