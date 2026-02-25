@@ -24,7 +24,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ─── Main ──────────────────────────────────── */
+/*  Main  */
 
 main {
   flex: 1;
@@ -40,7 +40,7 @@ main {
   max-width: 560px;
 }
 
-/* ─── Site header ───────────────────────────── */
+/*  Site header  */
 
 .site-header {
   text-align: center;
@@ -61,7 +61,7 @@ main {
   opacity: 0.7;
 }
 
-/* ─── Explainer ─────────────────────────────── */
+/*  Explainer  */
 
 .explainer {
   width: 100%;
@@ -92,7 +92,7 @@ main {
   margin-top: 10px;
 }
 
-/* ─── Button view ───────────────────────────── */
+/*  Button view  */
 
 #btn-area {
   display: flex;
@@ -146,7 +146,7 @@ main {
   font-style: italic;
 }
 
-/* ─── Card ──────────────────────────────────── */
+/*  Card  */
 
 #card-area {
   display: none;
@@ -236,7 +236,7 @@ main {
   border-radius: 3px;
 }
 
-/* ─── Footer ────────────────────────────────── */
+/*  Footer  */
 
 footer {
   padding: 0 24px 52px;
@@ -319,7 +319,7 @@ footer {
   color: var(--accent);
 }
 
-/* ─── Desktop large (≥ 1200px) ──────────────── */
+/*  Desktop large (≥ 1200px)  */
 
 @media (min-width: 1200px) {
   main {
@@ -337,7 +337,7 @@ footer {
   }
 }
 
-/* ─── Tablet (≤ 768px) ──────────────────────── */
+/*  Tablet (≤ 768px)  */
 
 @media (max-width: 768px) {
   main {
@@ -350,7 +350,7 @@ footer {
   }
 }
 
-/* ─── Mobile (≤ 480px) ──────────────────────── */
+/*  Mobile (≤ 480px)  */
 
 @media (max-width: 480px) {
   main {
@@ -410,7 +410,7 @@ footer {
   }
 }
 
-/* ─── Touch: disable hover lift effects ──────── */
+/*  Touch: disable hover lift effects  */
 
 @media (hover: none) {
   #read-btn:hover:not(:disabled) {

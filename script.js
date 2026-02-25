@@ -1,4 +1,4 @@
-/* ── Config ──────────────────────────────────── */
+// -- Config -------------------------------------------
 
 const feeds = [
   "https://www.paulgraham.com/rss.html",
@@ -9,12 +9,12 @@ const feeds = [
 const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeW6icje8Lrm2LwJf51H5SpdufMQMcbSiUmRthoc8I8YQ20yg/viewform';
 const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
-/* ── State ───────────────────────────────────── */
+// -- State --------------------------------------------
 
 let allPosts = null;
 let current  = null;
 
-/* ── Data fetching ───────────────────────────── */
+// -- Data fetching ------------------------------------
 
 async function loadFeeds() {
   const results = await Promise.allSettled(
@@ -47,7 +47,7 @@ function pickRandom(pool, exclude = null) {
   return source[Math.floor(Math.random() * source.length)] ?? null;
 }
 
-/* ── DOM helpers ─────────────────────────────── */
+// -- DOM helpers --------------------------------------
 
 function setCardContent(post) {
   document.getElementById('card-blog').textContent  = post.blog;
@@ -63,20 +63,17 @@ function revealCard(post) {
   const cardArea = document.getElementById('card-area');
   const card     = document.getElementById('post-card');
 
-  // Fade button out
   btnArea.style.transition = 'opacity 0.22s ease';
   btnArea.style.opacity    = '0';
 
   setTimeout(() => {
     btnArea.style.display = 'none';
 
-    // Set card to starting (invisible) position before showing
     card.style.transition = 'none';
     card.style.opacity    = '0';
     card.style.transform  = 'translateY(22px)';
     cardArea.style.display = 'block';
 
-    // Trigger transition on next paint
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         card.style.transition = [
@@ -90,7 +87,7 @@ function revealCard(post) {
   }, 240);
 }
 
-// Subsequent swaps: quick fade out → update → fade back in
+// Subsequent swaps: quick fade out -> update -> fade back in
 function swapCard(post) {
   const card = document.getElementById('post-card');
 
@@ -109,7 +106,7 @@ function swapCard(post) {
   }, 170);
 }
 
-/* ── Event handlers ──────────────────────────── */
+// -- Event handlers -----------------------------------
 
 const readBtn  = document.getElementById('read-btn');
 const errorMsg = document.getElementById('error-msg');
@@ -150,10 +147,10 @@ document.getElementById('blog-form').addEventListener('submit', e => {
   const honeypot  = document.getElementById('input-trap').value;
   const submitBtn = e.target.querySelector('button[type="submit"]');
 
-  // Honeypot triggered — bot detected, silently drop
+  // Honeypot triggered -- bot detected, silently drop
   if (honeypot) return;
 
-  // Rate limit — one submission per 10 minutes per browser
+  // Rate limit -- one submission per 10 minutes per browser
   const lastSubmit = parseInt(localStorage.getItem('rab_last_submit') || '0', 10);
   if (Date.now() - lastSubmit < RATE_LIMIT_MS) {
     submitBtn.textContent = 'Please wait a bit!';
@@ -161,7 +158,7 @@ document.getElementById('blog-form').addEventListener('submit', e => {
     return;
   }
 
-  // POST directly to Google Forms — no redirect, data goes straight to the Sheet
+  // POST directly to Google Forms -- no redirect, data goes straight to the Sheet
   fetch(GOOGLE_FORM_URL.replace('/viewform', '/formResponse'), {
     method: 'POST',
     mode:   'no-cors',
@@ -172,7 +169,7 @@ document.getElementById('blog-form').addEventListener('submit', e => {
     }),
   });
 
-  // Optimistic confirmation — no response comes back with no-cors
+  // Optimistic confirmation -- no response comes back with no-cors
   localStorage.setItem('rab_last_submit', Date.now().toString());
   e.target.reset();
   submitBtn.textContent = 'Thanks!';
