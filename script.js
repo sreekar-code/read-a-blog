@@ -1,8 +1,7 @@
 // -- Config -------------------------------------------
 
 const feeds = [
-  "https://www.paulgraham.com/rss.html",
-  "https://simonwillison.net/atom/everything/",
+
   "https://sreekarscribbles.com/feed.xml",
   "https://aravindballa.com/rss.xml"
 ];
