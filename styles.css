@@ -284,6 +284,10 @@ footer {
   gap: 8px;
 }
 
+.cf-turnstile {
+  align-self: center;
+}
+
 .blog-form input,
 .blog-form button {
   font-family: system-ui, -apple-system, sans-serif;

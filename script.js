@@ -9,7 +9,6 @@ const feeds = [
   "https://sive.rs/en.atom"
 ];
 
-const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeW6icje8Lrm2LwJf51H5SpdufMQMcbSiUmRthoc8I8YQ20yg/viewform';
 const PROXY = '/.netlify/functions/rss-proxy?url=';
 
 // -- State --------------------------------------------
@@ -153,11 +152,12 @@ document.getElementById('btn-another').addEventListener('click', () => {
 
 const RATE_LIMIT_MS = 10 * 60 * 1000; // 10 minutes
 
-document.getElementById('blog-form').addEventListener('submit', e => {
+document.getElementById('blog-form').addEventListener('submit', async e => {
   e.preventDefault();
   const blogUrl   = document.getElementById('input-url').value.trim();
   const name      = document.getElementById('input-name').value.trim();
   const honeypot  = document.getElementById('input-trap').value;
+  const token     = e.target.querySelector('[name="cf-turnstile-response"]')?.value || '';
   const submitBtn = e.target.querySelector('button[type="submit"]');
 
   // Honeypot triggered -- bot detected, silently drop
@@ -171,24 +171,29 @@ document.getElementById('blog-form').addEventListener('submit', e => {
     return;
   }
 
-  // POST directly to Google Forms -- no redirect, data goes straight to the Sheet
-  fetch(GOOGLE_FORM_URL.replace('/viewform', '/formResponse'), {
-    method: 'POST',
-    mode:   'no-cors',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      'entry.487552982':  blogUrl,
-      'entry.1528747364': name,
-    }),
-  });
-
-  // Optimistic confirmation -- no response comes back with no-cors
-  localStorage.setItem('rab_last_submit', Date.now().toString());
-  e.target.reset();
-  submitBtn.textContent = 'Thanks!';
   submitBtn.disabled    = true;
-  setTimeout(() => {
-    submitBtn.textContent = 'Submit \u2192';
+  submitBtn.textContent = 'Submitting\u2026';
+
+  try {
+    const res = await fetch('/.netlify/functions/submit-blog', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body:    new URLSearchParams({ blogUrl, name, 'cf-turnstile-response': token }),
+    });
+
+    if (!res.ok) throw new Error('Submission failed');
+
+    localStorage.setItem('rab_last_submit', Date.now().toString());
+    e.target.reset();
+    if (window.turnstile) window.turnstile.reset();
+    submitBtn.textContent = 'Thanks!';
+    setTimeout(() => {
+      submitBtn.textContent = 'Submit \u2192';
+      submitBtn.disabled    = false;
+    }, 3000);
+  } catch {
+    if (window.turnstile) window.turnstile.reset();
+    submitBtn.textContent = 'Try again';
     submitBtn.disabled    = false;
-  }, 3000);
+  }
 });
