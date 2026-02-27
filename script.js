@@ -13,8 +13,11 @@ const PROXY = '/.netlify/functions/rss-proxy?url=';
 
 // -- State --------------------------------------------
 
-let allPosts = null;
-let current  = null;
+let allPosts    = null;
+let postsByBlog = null;  // Map<blogName, post[]>
+let blogQueue   = [];    // shuffled rotation of blog names
+let blogIndex   = 0;
+let current     = null;
 
 // -- Data fetching ------------------------------------
 
@@ -43,10 +46,52 @@ async function loadFeeds() {
   return posts;
 }
 
-function pickRandom(pool, exclude = null) {
-  const available = exclude ? pool.filter(p => p !== exclude) : pool;
-  const source    = available.length > 0 ? available : pool;
-  return source[Math.floor(Math.random() * source.length)] ?? null;
+// Groups posts by blog name into a Map.
+function buildPostMap(posts) {
+  const map = new Map();
+  for (const post of posts) {
+    if (!map.has(post.blog)) map.set(post.blog, []);
+    map.get(post.blog).push(post);
+  }
+  return map;
+}
+
+// Fisher-Yates shuffle, returns a new array.
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Refills blogQueue with a fresh shuffle of all blog names.
+// Ensures the first blog in the new cycle isn't the same as lastBlog
+// (avoids a same-blog repeat at the cycle boundary).
+function refillQueue(lastBlog = null) {
+  blogQueue = shuffle([...postsByBlog.keys()]);
+  if (lastBlog && blogQueue.length > 1 && blogQueue[0] === lastBlog) {
+    const end = blogQueue.length - 1;
+    [blogQueue[0], blogQueue[end]] = [blogQueue[end], blogQueue[0]];
+  }
+  blogIndex = 0;
+}
+
+// Picks the next post using a round-robin blog rotation.
+// Each blog gets one slot per cycle; after all blogs have appeared the
+// deck reshuffles. Never picks the same post object twice in a row.
+function pickNext() {
+  if (!postsByBlog || postsByBlog.size === 0) return null;
+  if (blogIndex >= blogQueue.length) refillQueue(current?.blog);
+
+  const blogName = blogQueue[blogIndex++];
+  const posts    = postsByBlog.get(blogName);
+  const available = (current && current.blog === blogName)
+    ? posts.filter(p => p !== current)
+    : posts;
+  const pool = available.length > 0 ? available : posts;
+  return pool[Math.floor(Math.random() * pool.length)] ?? null;
 }
 
 // -- DOM helpers --------------------------------------
@@ -129,11 +174,15 @@ readBtn.addEventListener('click', async () => {
   errorMsg.style.display = 'none';
 
   try {
-    if (!allPosts) allPosts = await loadFeeds();
+    if (!allPosts) {
+      allPosts    = await loadFeeds();
+      postsByBlog = buildPostMap(allPosts);
+      refillQueue();
+    }
 
     if (allPosts.length === 0) throw new Error('No posts found');
 
-    current = pickRandom(allPosts);
+    current = pickNext();
     revealCard(current);
 
   } catch {
@@ -146,7 +195,7 @@ readBtn.addEventListener('click', async () => {
 
 document.getElementById('btn-another').addEventListener('click', () => {
   if (!allPosts || allPosts.length === 0) return;
-  current = pickRandom(allPosts, current);
+  current = pickNext();
   swapCard(current);
 });
 
